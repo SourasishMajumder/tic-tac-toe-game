@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A premium, neon glassmorphism Tic Tac Toe game with an unbeatable AI and local multiplayer.">
+    <title>RetroNeon Tic Tac Toe</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Local Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background glowing decorative spheres for glassmorphism layout -->
+    <div class="glow-bg-sphere sphere-1"></div>
+    <div class="glow-bg-sphere sphere-2"></div>
+    <div class="glow-bg-sphere sphere-3"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1 class="logo">NEON<span>TOE</span></h1>
+            <div class="header-controls">
+                <button id="sound-toggle" class="icon-btn" aria-label="Toggle Sound" title="Toggle Sound">
+                    <!-- Unmuted SVG icon -->
+                    <svg id="sound-on-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.85 14,18.71V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.77 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                    </svg>
+                    <!-- Muted SVG icon (hidden by default) -->
+                    <svg id="sound-off-icon" class="hidden" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.43 14,18.7V20.77C15.38,20.44 16.63,19.78 17.7,18.89L20.73,21.9L22,20.63L4.27,3M19,12C19,12.91 18.81,13.77 18.47,14.56L19.97,16.06C20.62,14.85 21,13.47 21,12C21,7.72 18,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,10.23 15.5,8.71 14,7.97V10.18L16.45,12.63C16.48,12.43 16.5,12.22 16.5,12Z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Configuration Settings -->
+        <section class="config-panel glass-card">
+            <div class="setting-group">
+                <span class="setting-label">Game Mode</span>
+                <div class="tab-container">
+                    <button id="mode-pvp" class="tab-btn active" data-mode="pvp">2-Player</button>
+                    <button id="mode-pve" class="tab-btn" data-mode="pve">VS Computer</button>
+                </div>
+            </div>
+            
+            <div id="difficulty-setting" class="setting-group hidden-fade">
+                <span class="setting-label">Difficulty</span>
+                <div class="tab-container">
+                    <button id="diff-easy" class="tab-btn" data-diff="easy">Easy</button>
+                    <button id="diff-hard" class="tab-btn active" data-diff="hard">Unbeatable</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scoreboard -->
+        <section class="scoreboard glass-card">
+            <div class="score-card player-x-score">
+                <span class="score-title">Player X</span>
+                <span id="score-val-x" class="score-number">0</span>
+            </div>
+            <div class="score-card draw-score">
+                <span class="score-title">Draws</span>
+                <span id="score-val-draw" class="score-number">0</span>
+            </div>
+            <div class="score-card player-o-score">
+                <span id="player-o-label" class="score-title">Player O</span>
+                <span id="score-val-o" class="score-number">0</span>
+            </div>
+        </section>
+
+        <!-- Game Info / Status Bar -->
+        <div class="status-bar">
+            <span id="turn-indicator">Player <span class="x-highlight">X</span>'s Turn</span>
+        </div>
+
+        <!-- Tic Tac Toe Grid -->
+        <main class="board-container glass-card">
+            <div id="board" class="board">
+                <div class="cell" data-index="0" id="cell-0"></div>
+                <div class="cell" data-index="1" id="cell-1"></div>
+                <div class="cell" data-index="2" id="cell-2"></div>
+                <div class="cell" data-index="3" id="cell-3"></div>
+                <div class="cell" data-index="4" id="cell-4"></div>
+                <div class="cell" data-index="5" id="cell-5"></div>
+                <div class="cell" data-index="6" id="cell-6"></div>
+                <div class="cell" data-index="7" id="cell-7"></div>
+                <div class="cell" data-index="8" id="cell-8"></div>
+                <div id="winning-line" class="winning-line"></div>
+            </div>
+        </main>
+
+        <!-- Bottom Controls -->
+        <footer class="controls">
+            <button id="reset-board-btn" class="glow-btn">Reset Game</button>
+            <button id="reset-scores-btn" class="glow-btn outline">Reset Scoreboard</button>
+        </footer>
+    </div>
+
+    <!-- Win/Draw Announcement Modal Overlay -->
+    <div id="result-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-card">
+            <div class="modal-icon-container">
+                <div id="modal-winner-symbol" class="winner-symbol">X</div>
+            </div>
+            <h2 id="modal-title" class="modal-heading">Winner!</h2>
+            <p id="modal-subtitle" class="modal-desc">Player X takes the round</p>
+            <button id="modal-play-again-btn" class="glow-btn large">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Embedded Local Audio Assets -->
+    <!-- Synthetic audio elements (we'll synthesize using Web Audio API in JS if physical files are missing!) -->
+    
+    <!-- Game JS -->
+    <script src="game.js"></script>
+</body>
+</html>
